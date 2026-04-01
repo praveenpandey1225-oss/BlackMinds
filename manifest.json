@@ -1,6 +1,7 @@
 {
   "name": "BlackMinds App",
   "short_name": "BlackMinds",
+  "description": "A professional app built for BlackMinds projects and interactive features.",
   "start_url": "TRICKIT.html",
   "display": "standalone",
   "background_color": "#ffffff",
