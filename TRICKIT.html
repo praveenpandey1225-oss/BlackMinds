@@ -43,7 +43,7 @@ body.th-steel{--bg:#0e1420;--bg-grad:radial-gradient(ellipse at 20% 20%,rgba(106
 
 /* ===== BASE ===== */
 *,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;transition:background 0.45s,color 0.45s;user-select:none;-webkit-font-smoothing:antialiased}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);height:100%;min-height:100dvh;overflow:hidden;transition:background 0.45s,color 0.45s;user-select:none;-webkit-font-smoothing:antialiased}
 
 /* FIX: always-visible ambient gradient overlay */
 body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer-events:none;z-index:0}
