@@ -1,16 +1,17 @@
 {
-  "name": "BlackMinds App",
-  "short_name": "BlackMinds",
-  "description": "A professional app built for BlackMinds projects and interactive features.",
+  "name": "Trickit Pro",
+  "short_name": "Trickit",
+  "description": "Professional Notes and Focus Tracker App",
   "start_url": "TRICKIT.html",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "background_color": "#0d0f1a",
+  "theme_color": "#007AFF",
   "icons": [
     {
-      "src": "logo.png",
+      "src": "https://praveenpandey1225-oss.github.io/BlackMinds/logo.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
