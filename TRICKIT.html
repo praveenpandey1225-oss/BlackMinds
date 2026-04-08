@@ -837,6 +837,9 @@ function applyTheme(id,save){
     buildThemeGrid();
   }
   updateModeIcon();
+  
+  // Ye rahi aapki add ki hui nayi line
+  document.querySelector('meta[name="theme-color"]').setAttribute("content", getComputedStyle(document.body).getPropertyValue('--bg').trim());
 }
 function updateModeIcon(){
   const isLight=LIGHT_THEMES.includes(currentTheme);
