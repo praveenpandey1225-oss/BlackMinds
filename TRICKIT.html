@@ -374,11 +374,15 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
 
 /* NAME MODAL */
 .name-modal-inner{background:var(--modal-bg);padding:24px 20px;border-radius:22px;width:88%;max-width:290px;border:1px solid var(--border);box-shadow:0 16px 48px rgba(0,0,0,0.4);text-align:center;animation:secIn 0.3s cubic-bezier(0.34,1.56,0.64,1)}
+
+/* MODIFIED GOOGLE BUTTON FOR MODAL */
+.g-btn-modal{width:100%;padding:11px;background:white;color:black;border:none;border-radius:12px;font-weight:800;cursor:pointer;font-size:14px;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;transition:all 0.2s}
+.g-btn-modal:active{transform:scale(0.96)}
+.g-btn-modal img{width:18px;height:18px}
 </style>
 </head>
 <body>
 
-<!-- SVG SPRITE -->
 <svg style="display:none">
   <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
   <symbol id="i-notes" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></symbol>
@@ -398,7 +402,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
-  <!-- Keep features icons -->
   <symbol id="i-pin" viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></symbol>
   <symbol id="i-list" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></symbol>
   <symbol id="i-draw" viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></symbol>
@@ -406,7 +409,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
 
 <div class="blobs"><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div></div>
 
-<!-- CUSTOM CONFIRM -->
 <div class="custom-confirm" id="customConfirm">
   <div class="confirm-box">
     <div class="confirm-icon" id="confirmIcon">🗑️</div>
@@ -419,18 +421,24 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   </div>
 </div>
 
-<!-- NAME MODAL -->
 <div class="modal-overlay" id="nameModal" style="display:none">
   <div class="name-modal-inner">
     <svg style="width:42px;height:42px;stroke:var(--accent);fill:rgba(0,122,255,0.14);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-bottom:10px" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
     <h2 style="font-size:20px;font-weight:900;margin-bottom:5px;color:var(--text)">Welcome!</h2>
-    <p style="font-size:13px;color:var(--text2);margin-bottom:13px">Enter your name to begin</p>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:18px">Sign in to sync your data</p>
+    
+    <button class="g-btn-modal" onclick="handleAuth()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="G">
+      Continue with Google
+    </button>
+    
+    <div style="font-size:11px;font-weight:700;color:var(--text3);margin-bottom:12px;letter-spacing:1px">OR</div>
+
     <input class="modal-inp" id="nameInp" placeholder="Your Name" type="text" autocomplete="off">
-    <button class="btn-m btn-save-m" style="width:100%;margin-top:4px" onclick="saveName()">Let's Go</button>
+    <button class="btn-m btn-save-m" style="width:100%;margin-top:4px" onclick="saveName()">Continue Offline</button>
   </div>
 </div>
 
-<!-- THEME MODAL -->
 <div class="modal-overlay" id="themeModal">
   <div class="theme-panel">
     <h3>Choose Theme</h3>
@@ -438,7 +446,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   </div>
 </div>
 
-<!-- COUNTDOWN DETAIL -->
 <div class="modal-overlay" id="detailModal" onclick="this.style.display='none'">
   <div class="modal-box" onclick="event.stopPropagation()">
     <h3 id="dTitle">Time Left</h3>
@@ -450,7 +457,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   </div>
 </div>
 
-<!-- ADD COUNTDOWN -->
 <div class="modal-overlay" id="dateModal">
   <div class="modal-box">
     <h3>New Countdown</h3>
@@ -463,7 +469,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   </div>
 </div>
 
-<!-- NOTE EDITOR (Google Keep + Samsung Notes Style) -->
 <div class="modal-overlay" id="editorSheet" style="align-items:flex-end">
   <div class="sheet" id="sheetEl">
     <div class="sheet-head">
@@ -473,19 +478,16 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
     <input type="text" id="nTitle" class="n-title" placeholder="Title">
     <img id="prevImg" class="img-preview">
     
-    <!-- Canvas for drawing (Samsung Notes) -->
     <div class="n-canvas-wrap" id="nCanvasWrap">
        <button class="btn-clear-canvas" onclick="clearCanvas()">Clear</button>
        <canvas id="nCanvas" class="n-canvas"></canvas>
     </div>
     
-    <!-- Checklist mode (Google Keep) -->
     <div id="nListWrap" class="n-list-wrap">
        <div id="nListItems"></div>
        <input type="text" id="nListAdd" class="n-list-input" placeholder="+ List item" onkeypress="addNoteListItem(event)" style="margin-top:8px;">
     </div>
     
-    <!-- Standard text -->
     <textarea id="nBody" class="n-body" placeholder="Start writing..."></textarea>
     
     <div class="toolbar">
@@ -506,7 +508,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   </div>
 </div>
 
-<!-- SYLLABUS MODALS -->
 <div class="modal-overlay" id="sylInputModal">
   <div class="modal-box"><h3 id="sylMTitle">Add New</h3>
     <input class="modal-inp" id="sylMInp" placeholder="Name..." autocomplete="off">
@@ -537,7 +538,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   </div>
 </div>
 
-<!-- BRAIN MODAL (Time Tracker) -->
 <div class="modal-overlay" id="brainModal">
   <div class="big-modal">
     <button class="back-btn" onclick="closeModal('brainModal')"><svg><use href="#i-back"/></svg></button>
@@ -562,7 +562,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   </div>
 </div>
 
-<!-- DAILY GOALS MODAL (Updated with Day Tracker) -->
 <div class="modal-overlay" id="dailyModal">
   <div class="big-modal">
     <button class="back-btn" onclick="closeModal('dailyModal')"><svg><use href="#i-back"/></svg></button>
@@ -584,10 +583,8 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   </div>
 </div>
 
-<!-- COLOUR PICKER POP (todos) -->
 <div class="color-picker-pop" id="todoColorPop" style="display:none"></div>
 
-<!-- MAIN APP -->
 <div class="app">
   <div class="header" id="mainHeader">
     <div>
@@ -604,12 +601,10 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   </div>
 
   <div class="scroll" id="mainScroll">
-    <!-- EVENTS -->
     <div class="section active" id="sec-count">
       <div class="cd-carousel" id="cdList"></div>
     </div>
 
-    <!-- NOTES -->
     <div class="section" id="sec-notes">
       <div class="sec-sticky">
         <div class="hdr-row"><div class="sec-sticky-title">Notes</div></div>
@@ -617,7 +612,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
       <div class="notes-grid" id="notesList"></div>
     </div>
 
-    <!-- SYLLABUS -->
     <div class="section" id="sec-syllabus">
       <div class="sec-sticky">
         <div class="hdr-row"><div class="sec-sticky-title">Syllabus</div></div>
@@ -633,7 +627,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
       <div class="syl-carousel" id="sylCarousel"></div>
     </div>
 
-    <!-- FOCUS -->
     <div class="section" id="sec-pomo">
       <div class="sec-sticky">
         <div class="hdr-row"><div class="sec-sticky-title">Focus</div></div>
@@ -669,7 +662,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
       </div>
     </div>
 
-    <!-- TRICKS -->
     <div class="section" id="sec-tricks">
       <div class="sec-sticky">
         <div class="hdr-row"><div class="sec-sticky-title">Tricks</div></div>
@@ -694,6 +686,94 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
     <div class="tab" onclick="switchTab('tricks',this)"><svg><use href="#i-bulb"/></svg><span>Tricks</span></div>
   </nav>
 </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA6LzS7mSIZVs2Xrl4PTEeKjOho_qRvoKU",
+    authDomain: "blackminds-21709.firebaseapp.com",
+    projectId: "blackminds-21709",
+    storageBucket: "blackminds-21709.firebasestorage.app",
+    messagingSenderId: "572703396159",
+    appId: "1:572703396159:web:509a75e13f3f5bce8038ae"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
+
+  let currentUser = null;
+
+  // signInWithRedirect works best on mobile browsers to prevent cancelled-popup errors
+  window.handleAuth = () => {
+    signInWithRedirect(auth, provider);
+  };
+
+  // Check if user just came back from Google Login page
+  getRedirectResult(auth).then(async (result) => {
+    if (result && result.user) {
+      currentUser = result.user;
+      
+      if(!appData.name || appData.name !== currentUser.displayName) {
+        appData.name = currentUser.displayName;
+        saveApp();
+        updateGreeting();
+      }
+      
+      document.getElementById('nameModal').style.display = 'none';
+      await syncDataWithFirebase();
+    }
+  }).catch((error) => {
+    console.error("Auth Error:", error);
+    alert("Login Error: " + error.message + "\n\nMake sure praveenpandey1225-oss.github.io is added to Authorized Domains in Firebase Console.");
+  });
+
+  // Sync Local Storage to Firebase
+  async function syncDataWithFirebase() {
+    if (!currentUser) return;
+    try {
+      const userRef = doc(db, "users", currentUser.uid);
+      const docSnap = await getDoc(userRef);
+
+      if (docSnap.exists()) {
+        const cloudData = docSnap.data();
+        if(cloudData.appData) localStorage.setItem(K.app, cloudData.appData);
+        if(cloudData.sylData) localStorage.setItem(K.syl, cloudData.sylData);
+        if(cloudData.daysData) localStorage.setItem(K.days, cloudData.daysData);
+        location.reload(); 
+      } else {
+        await window.pushDataToCloud();
+      }
+    } catch(e) { console.error("Sync error:", e); }
+  }
+
+  window.pushDataToCloud = async () => {
+    if (!currentUser) return;
+    try {
+      await setDoc(doc(db, "users", currentUser.uid), {
+        appData: localStorage.getItem(K.app) || '',
+        sylData: localStorage.getItem(K.syl) || '',
+        daysData: localStorage.getItem(K.days) || '',
+        lastUpdated: new Date().toISOString()
+      });
+      console.log("Data synced to Firebase.");
+    } catch(e) { console.error("Cloud push error:", e); }
+  };
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      currentUser = user;
+      // Also hide modal if user is already logged in
+      document.getElementById('nameModal').style.display = 'none';
+    } else {
+      currentUser = null;
+    }
+  });
+</script>
 
 <script>
 /* ─── KEYS ─── */
@@ -781,8 +861,14 @@ function loadAll(){
   sylHistory=[JSON.stringify(sylData)];sylHistIdx=0;
   try{pomoSessions=parseInt(localStorage.getItem(K.pomo))||0;}catch(e){}
 }
-function saveApp(){localStorage.setItem(K.app,JSON.stringify(appData));}
-function saveSyl(){localStorage.setItem(K.syl,JSON.stringify(sylData));}
+
+// Global Save Wrapper for Firebase
+function saveWithCloud() {
+  if(window.pushDataToCloud) window.pushDataToCloud();
+}
+
+function saveApp(){localStorage.setItem(K.app,JSON.stringify(appData)); saveWithCloud();}
+function saveSyl(){localStorage.setItem(K.syl,JSON.stringify(sylData)); saveWithCloud();}
 function savePomo(){localStorage.setItem(K.pomo,pomoSessions);}
 
 /* ─── CONFIRM ─── */
@@ -838,7 +924,6 @@ function applyTheme(id,save){
   }
   updateModeIcon();
   
-  // Ye rahi aapki add ki hui nayi line
   document.querySelector('meta[name="theme-color"]').setAttribute("content", getComputedStyle(document.body).getPropertyValue('--bg').trim());
 }
 function updateModeIcon(){
@@ -909,10 +994,9 @@ function addCountdown(){
 }
 function deleteCountdown(id){appData.countdowns=appData.countdowns.filter(c=>c.id!==id);saveApp();renderCountdowns();}
 
-/* ─── NOTES (UPDATED w/ Keep & Samsung features) ─── */
+/* ─── NOTES ─── */
 function renderNotes(){
   const list=document.getElementById('notesList');list.innerHTML='';
-  // Sort pinned notes to top
   const sortedNotes = appData.notes.map((n,i)=>({...n, originalIndex:i})).sort((a,b)=>(b.pinned===true) - (a.pinned===true));
   
   sortedNotes.forEach((n)=>{
@@ -927,7 +1011,6 @@ function renderNotes(){
     const dateStr=n.date?new Date(n.date).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
     const pinIcon=n.pinned?`<svg class="note-pin-icon"><use href="#i-pin"/></svg>`:'';
     
-    // Preview Logic (List vs Text)
     let prevHtml = '';
     if (n.isList && n.listItems) {
       prevHtml = n.listItems.slice(0,3).map(li => `<div style="display:flex;align-items:center;gap:4px;font-size:11px;opacity:${li.done?0.5:1}"><svg style="width:8px;height:8px;stroke:${tCol};fill:none;stroke-width:2"><use href="#i-check"/></svg><span style="text-decoration:${li.done?'line-through':'none'}">${li.text}</span></div>`).join('');
@@ -968,9 +1051,7 @@ function openEditor(i=null){
     tempPinned=false;tempIsList=false;tempListItems=[];tempDrawData=null;
     document.getElementById('prevImg').style.display='none';
   }
-  
-  updateSheetStyle();
-  syncEditorUI();
+  updateSheetStyle(); syncEditorUI();
 }
 function closeEditor(){if(history.state&&history.state.modal==='editor')history.back();else document.getElementById('editorSheet').style.display='none';}
 
@@ -1003,7 +1084,6 @@ document.getElementById('imgInp').onchange=e=>{
   const f=e.target.files[0];if(f){const r=new FileReader();r.onload=ev=>{tempImg=ev.target.result;document.getElementById('prevImg').src=tempImg;document.getElementById('prevImg').style.display='block';};r.readAsDataURL(f);}
 };
 
-// Notes Extended Functions
 function toggleNotePin(){ tempPinned = !tempPinned; syncEditorUI(); }
 function toggleNoteList(){ tempIsList = !tempIsList; syncEditorUI(); }
 function toggleNoteDraw(){ 
@@ -1059,18 +1139,15 @@ function toggleNoteListItem(idx){ tempListItems[idx].done = !tempListItems[idx].
 function updateNoteListItem(idx, val){ tempListItems[idx].text = val; }
 function delNoteListItem(idx){ tempListItems.splice(idx, 1); renderNoteListItems(); }
 
-// Samsung Notes Canvas Logic
 let nCtx, isDrawing = false;
 function setupCanvas(){
   const cvs = document.getElementById('nCanvas');
   nCtx = cvs.getContext('2d');
-  
   const getPos = (e) => {
     const rect = cvs.getBoundingClientRect();
     const touch = e.touches ? e.touches[0] : e;
     return { x: touch.clientX - rect.left, y: touch.clientY - rect.top };
   };
-
   const startDraw = (e) => {
     isDrawing = true; const pos = getPos(e);
     nCtx.beginPath(); nCtx.moveTo(pos.x, pos.y); nCtx.lineWidth=2; nCtx.lineCap='round'; nCtx.strokeStyle=tempTextCol;
@@ -1080,7 +1157,6 @@ function setupCanvas(){
     const pos = getPos(e); nCtx.lineTo(pos.x, pos.y); nCtx.stroke();
   };
   const stopDraw = () => { isDrawing = false; };
-
   cvs.addEventListener('mousedown', startDraw); cvs.addEventListener('mousemove', draw);
   cvs.addEventListener('mouseup', stopDraw); cvs.addEventListener('mouseleave', stopDraw);
   cvs.addEventListener('touchstart', startDraw, {passive:false}); cvs.addEventListener('touchmove', draw, {passive:false});
@@ -1089,7 +1165,7 @@ function setupCanvas(){
 function resizeCanvas(){
   const cvs = document.getElementById('nCanvas');
   const wrap = document.getElementById('nCanvasWrap');
-  if(wrap.style.display==='block' && cvs.width === 300) { // default width check
+  if(wrap.style.display==='block' && cvs.width === 300) {
     cvs.width = wrap.clientWidth; cvs.height = wrap.clientHeight;
     if(tempDrawData) loadCanvasData(tempDrawData);
   }
@@ -1195,7 +1271,6 @@ function renderSyllabus(shouldSave=true){
       });
       sectHTML+=`<div class="section-box"><div class="section-header"><span class="section-name">${sec.title}</span><button class="btn-syl" style="background:rgba(255,71,87,0.1)" onclick="sylDelSec(${i},${j})"><svg style="width:12px;height:12px;fill:var(--red)"><use href="#i-trash"/></svg></button></div>${iHTML}<div class="sec-actions"><button class="btn-sec-action btn-add-item-syl" onclick="openSylModal('item',${i},${j})">+ Topic</button><button class="btn-sec-action btn-paste" onclick="openPasteModal(${i},${j})">Paste</button></div></div>`;
     });
-    
     const sPct=sT===0?0:Math.round((sD/sT)*100);
     const slide=document.createElement('div');slide.className='syl-slide';
     slide.innerHTML=`<div class="water-wrap"><div class="water-circle"><div class="water-wave" style="top:${100-sPct}%;background:linear-gradient(to top,${g[0]},${g[1]})"></div><span class="water-pct">${sPct}%</span></div><span class="slide-title">${sub.title}</span></div>
@@ -1203,7 +1278,6 @@ function renderSyllabus(shouldSave=true){
       <button class="btn-add-sec" onclick="openSylModal('section',${i})">+ Add Section</button></div>`;
     car.appendChild(slide);
     setTimeout(()=>setupItemInteractions(slide,i),0);
-    
     const dot=document.createElement('div');dot.className='syl-dot';dot.onclick=()=>scrollSylTo(i+1);dotsEl.appendChild(dot);
   });
 }
@@ -1255,15 +1329,14 @@ function savePasteData(){
 function openEditItem(i,j,k){editItemSub=i;editItemSec=j;editItemItm=k;document.getElementById('editItemInp').value=sylData[i].sections[j].items[k].name;document.getElementById('editItemModal').style.display='flex';setTimeout(()=>document.getElementById('editItemInp').focus(),100);}
 function saveEditItem(){const val=document.getElementById('editItemInp').value.trim();if(val){sylData[editItemSub].sections[editItemSec].items[editItemItm].name=val;renderSyllabus(true);}closeModal('editItemModal');}
 
-/* ─── BRAIN (Time Log) ─── */
+/* ─── BRAIN ─── */
 function loadDayData(){
   try{daysData=JSON.parse(localStorage.getItem(K.days))||[{id:1,name:'Day 1',times:{},goals:[]}];}catch(e){daysData=[{id:1,name:'Day 1',times:{},goals:[]}];}
-  // Ensure goals exist in days
   daysData.forEach(d=>{ if(!d.goals) d.goals=[]; });
   try{const a=localStorage.getItem(K.acts);allActivities=a?JSON.parse(a):[{id:'sleep',name:'Sleep',color:'#4834d4'}];}catch(e){allActivities=[];}
   currentDayId=daysData[daysData.length-1].id;
 }
-function saveDayData(){localStorage.setItem(K.days,JSON.stringify(daysData));localStorage.setItem(K.acts,JSON.stringify(allActivities));}
+function saveDayData(){localStorage.setItem(K.days,JSON.stringify(daysData));localStorage.setItem(K.acts,JSON.stringify(allActivities)); saveWithCloud();}
 
 function addNewDay(){const id=daysData.length+1;daysData.push({id,name:'Day '+id,times:{},goals:[]});currentDayId=id;saveDayData();renderDayNav();renderActivityList(true);}
 function selectDay(id){isOverallMode=false;currentDayId=id;renderDayNav();renderActivityList(true);}
@@ -1286,10 +1359,8 @@ function renderActivityList(full=false){
   let times={};
   if(isOverallMode){allActivities.forEach(a=>{let s=0;daysData.forEach(d=>{s+=(d.times[a.id]||0);});times[a.id]=Math.round(s/Math.max(1,daysData.length));});}
   else{const cur=daysData.find(d=>d.id===currentDayId)||daysData[0];times=cur.times;}
-  
   vs.innerHTML='';
   allActivities.forEach(act=>{const mins=times[act.id]||0,pct=(mins/1440)*100;if(pct>0){const layer=document.createElement('div');layer.className='viz-layer';layer.style.height=pct+'%';layer.innerHTML=`<div class="viz-layer-bg" style="background:linear-gradient(135deg,${act.color},${hexRgba(act.color,0.7)})"></div>${pct>5?Math.round(pct)+'%':''}`;vs.appendChild(layer);}});
-  
   if(full){
     lc.innerHTML='';
     allActivities.forEach(act=>{const mins=times[act.id]||0,h=Math.floor(mins/60),m=mins%60,pct=Math.round((mins/1440)*100);const dis=isOverallMode?'disabled style="opacity:0.6"':'';const delB=!isOverallMode?`<button class="del-act" onclick="deleteActivity('${act.id}')">&#x2715;</button>`:'';const bg=`background:linear-gradient(135deg,${hexRgba(act.color,0.1)},${hexRgba(act.color,0.05)});border:1px solid ${hexRgba(act.color,0.2)}`;lc.innerHTML+=`<div class="act-row" style="${bg}"><div class="act-left"><div class="act-dot" style="background:${act.color}"></div>${act.name}</div><div class="act-inputs"><span class="act-pct" id="pct_${act.id}">${pct>0?pct+'%':''}</span><input type="number" min="0" max="24" class="time-inp" data-id="${act.id}" value="${h||''}" placeholder="H" oninput="updateTime('${act.id}')" ${dis}><span class="time-sep">:</span><input type="number" min="0" max="59" class="time-inp" data-id2="${act.id}" value="${m||''}" placeholder="M" oninput="updateTime2('${act.id}')" ${dis}>${delB}</div></div>`;});
@@ -1309,14 +1380,8 @@ function initColorWheel(){const grid=document.getElementById('colorWheelGrid');g
 function toggleColorPicker(){const o=document.getElementById('colorPickerOverlay');o.style.display=o.style.display==='flex'?'none':'flex';}
 function selectActColor(col){selectedColor=col;document.getElementById('colorTrigger').style.background=col;document.querySelector('.btn-add-cap').style.background=col;toggleColorPicker();}
 
-/* ─── DAILY GOALS (UPDATED w/ Days) ─── */
-function openDailyModal(){
-  loadDayData();
-  renderGoalDayNav();
-  renderDailyGoals();
-  document.getElementById('dailyModal').style.display='flex';
-}
-
+/* ─── DAILY GOALS ─── */
+function openDailyModal(){ loadDayData(); renderGoalDayNav(); renderDailyGoals(); document.getElementById('dailyModal').style.display='flex'; }
 function selectGoalDay(id){isOverallModeGoals=false;currentDayId=id;renderGoalDayNav();renderDailyGoals();}
 function showOverallGoals(){isOverallModeGoals=true;document.querySelectorAll('#goalDayNav .day-chip').forEach(b=>b.classList.remove('active'));renderDailyGoals();}
 function addNewGoalDay(){addNewDay();renderGoalDayNav();renderDailyGoals();}
@@ -1332,7 +1397,7 @@ function renderGoalDayNav(){
 }
 
 function addDailyGoal(){
-  if(isOverallModeGoals) return; // Cant add to overall
+  if(isOverallModeGoals) return;
   const t=document.getElementById('newDailyGoal').value.trim();
   if(t){
     const cur=daysData.find(d=>d.id===currentDayId);
@@ -1349,35 +1414,21 @@ function deleteDailyGoal(i){
   const cur=daysData.find(d=>d.id===currentDayId);
   cur.goals.splice(i,1); saveDayData(); renderDailyGoals();
 }
-
 function renderDailyGoals(){
   const list=document.getElementById('dailyGoalList');list.innerHTML='';
   document.getElementById('addGoalBox').style.display=isOverallModeGoals?'none':'flex';
-  
   let gList = [];
-  if(isOverallModeGoals){
-     daysData.forEach(d=> gList.push(...(d.goals||[])));
-  } else {
-     const cur=daysData.find(d=>d.id===currentDayId) || daysData[0];
-     gList = cur.goals || [];
-  }
-
+  if(isOverallModeGoals){ daysData.forEach(d=> gList.push(...(d.goals||[]))); } else { const cur=daysData.find(d=>d.id===currentDayId) || daysData[0]; gList = cur.goals || []; }
   let done=0;
   gList.forEach((g,i)=>{
     if(g.done)done++;
     const delBtn = !isOverallModeGoals ? `<button class="goal-del" onclick="event.stopPropagation();deleteDailyGoal(${i})">&#x2715;</button>` : '';
-    list.innerHTML+=`<div class="daily-goal-row ${g.done?'done':''}" onclick="toggleDailyGoal(${i})">
-      <div class="goal-tick"><svg style="width:11px;height:11px;stroke:#333;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round"><use href="#i-check"/></svg></div>
-      <span class="goal-text">${g.text}</span>
-      ${delBtn}
-    </div>`;
+    list.innerHTML+=`<div class="daily-goal-row ${g.done?'done':''}" onclick="toggleDailyGoal(${i})"><div class="goal-tick"><svg style="width:11px;height:11px;stroke:#333;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round"><use href="#i-check"/></svg></div><span class="goal-text">${g.text}</span>${delBtn}</div>`;
   });
-  
   const pct=gList.length>0?Math.round((done/gList.length)*100):0;
   document.getElementById('dailyPct').innerText=pct+'%';
   document.getElementById('dailyWave').style.top=(100-pct)+'%';
 }
-
 
 /* ─── POMODORO ─── */
 function beep(){
@@ -1431,9 +1482,7 @@ function updatePomoSessions(){const dots=document.getElementById('sessionDots');
 
 /* ─── UTILS ─── */
 function longPress(el,cb){
-  let t;
-  const start=()=>{t=setTimeout(()=>{cb();if(navigator.vibrate)navigator.vibrate(36);},620);};
-  const cancel=()=>clearTimeout(t);
+  let t; const start=()=>{t=setTimeout(()=>{cb();if(navigator.vibrate)navigator.vibrate(36);},620);}; const cancel=()=>clearTimeout(t);
   el.addEventListener('touchstart',start,{passive:true});el.addEventListener('touchend',cancel);el.addEventListener('touchmove',cancel);
   el.addEventListener('mousedown',start);el.addEventListener('mouseup',cancel);el.addEventListener('mouseleave',cancel);
 }
@@ -1441,11 +1490,9 @@ function showDelOverlay(card,delFn){
   const ov=document.createElement('div');ov.className='del-overlay';
   ov.innerHTML=`<button class="del-btn-big"><svg style="width:20px;height:20px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><use href="#i-trash"/></svg></button>`;
   ov.querySelector('.del-btn-big').onclick=e=>{e.stopPropagation();delFn();ov.remove();};
-  ov.onclick=e=>{if(e.target===ov)ov.remove();};
-  card.appendChild(ov);ov.style.display='flex';
+  ov.onclick=e=>{if(e.target===ov)ov.remove();}; card.appendChild(ov);ov.style.display='flex';
 }
 
-/* keyboard */
 [['sylMInp',()=>sylSaveData()],['editItemInp',()=>saveEditItem()],['nameInp',()=>saveName()],['newDailyGoal',()=>addDailyGoal()],['newActName',()=>addCustomActivity()],['eventInp',()=>addCountdown()],['nListAdd',()=>{}]]
 .forEach(([id,fn])=>{const el=document.getElementById(id);if(el)el.addEventListener('keypress',e=>{if(e.key==='Enter')fn();});});
 </script>
