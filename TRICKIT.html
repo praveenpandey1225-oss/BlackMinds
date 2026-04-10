@@ -690,7 +690,7 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
 <!-- FIREBASE SDKS -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { getAuth, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
   import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -708,90 +708,112 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   const provider = new GoogleAuthProvider();
 
   let currentUser = null;
+  // SECURITY LOCK: Download hone se pehle khali data upload hone se rokega!
+  let isSyncing = true; 
 
-  // FIXED POPUP LOGIN
-  window.handleAuth = async () => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      currentUser = result.user;
-      
-      if(!appData.name || appData.name !== currentUser.displayName) {
-        appData.name = currentUser.displayName;
-        saveApp();
-        updateGreeting();
-      }
-      
-      document.getElementById('nameModal').style.display = 'none';
-      await syncDataWithFirebase();
-    } catch (error) {
-      console.error(error);
-      if (error.code === 'auth/popup-blocked') {
-        alert("Popup block ho gaya! Ise kisi browser app (Chrome/Safari) mein kholo, WhatsApp ke andar nahi.");
-      } else if (error.code !== 'auth/cancelled-popup-request' && error.code !== 'auth/popup-closed-by-user') {
-        alert("Login Error: " + error.message);
-      }
-    }
+  window.handleAuth = () => {
+    signInWithRedirect(auth, provider);
   };
 
-  // SYNC LOGIC
-  async function syncDataWithFirebase() {
-    if (!currentUser) return;
-    try {
-      const userRef = doc(db, "users", currentUser.uid);
-      const docSnap = await getDoc(userRef);
+  getRedirectResult(auth).catch((error) => {
+    console.error("Redirect Error:", error);
+  });
 
-      if (docSnap.exists()) {
-        const cloudData = docSnap.data();
-        if(cloudData.appData) localStorage.setItem(K.app, cloudData.appData);
-        if(cloudData.sylData) localStorage.setItem(K.syl, cloudData.sylData);
-        if(cloudData.daysData) localStorage.setItem(K.days, cloudData.daysData);
-        location.reload(); 
-      } else {
-        await window.pushDataToCloud();
-      }
-    } catch(e) { 
-      console.error("Firestore Error:", e); 
-      alert("Error: Data sync nahi hua! Lagta hai Firebase Console mein 'Firestore Database' create nahi kiya hai. Pehle use banayein.");
-    }
-  }
-
-  window.pushDataToCloud = async () => {
-    if (!currentUser) return;
-    try {
-      await setDoc(doc(db, "users", currentUser.uid), {
-        appData: localStorage.getItem(K.app) || '',
-        sylData: localStorage.getItem(K.syl) || '',
-        daysData: localStorage.getItem(K.days) || '',
-        lastUpdated: new Date().toISOString()
-      });
-    } catch(e) { console.error("Cloud push error:", e); }
-  };
-
-  // LISTEN TO AUTH STATE
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       currentUser = user;
       document.getElementById('nameModal').style.display = 'none';
-      if(!appData.name) {
-        appData.name = user.displayName;
-        saveApp();
-        updateGreeting();
-      }
       
       try {
         const userRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(userRef);
-        if (!docSnap.exists()) {
+
+        if (docSnap.exists()) {
+          // --- STEP 1: CLOUD SE DATA DOWNLOAD KARO ---
+          const cloudData = docSnap.data();
+          let dataChanged = false;
+          
+          if(cloudData.appData && cloudData.appData !== localStorage.getItem("tp4_app")) {
+             localStorage.setItem("tp4_app", cloudData.appData);
+             dataChanged = true;
+          }
+          if(cloudData.sylData && cloudData.sylData !== localStorage.getItem("tp4_syl")) {
+             localStorage.setItem("tp4_syl", cloudData.sylData);
+             dataChanged = true;
+          }
+          if(cloudData.daysData && cloudData.daysData !== localStorage.getItem("tp4_days")) {
+             localStorage.setItem("tp4_days", cloudData.daysData);
+             dataChanged = true;
+          }
+
+          // Naam save karo bina Firebase ko bataye (taki overwrite na ho)
+          let localAppStr = localStorage.getItem("tp4_app");
+          if (localAppStr) {
+              let localAppObj = JSON.parse(localAppStr);
+              if (!localAppObj.name) {
+                  localAppObj.name = user.displayName;
+                  localStorage.setItem("tp4_app", JSON.stringify(localAppObj));
+                  dataChanged = true;
+              }
+          }
+
+          // Download success! Ab permission open kardo.
+          isSyncing = false; 
+
+          // Agar naya data download hua hai, toh app ko ek baar refresh kardo dikhane ke liye
+          if (dataChanged && !sessionStorage.getItem('justSynced')) {
+             sessionStorage.setItem('justSynced', 'true');
+             location.reload(); 
+          } else {
+             sessionStorage.removeItem('justSynced');
+          }
+          
+        } else {
+          // --- STEP 2: NAYA USER HAI TOH DATABASE CREATE KARO ---
+          isSyncing = false;
+          
+          let appDataLocal = localStorage.getItem("tp4_app");
+          if(appDataLocal) {
+              let parsed = JSON.parse(appDataLocal);
+              if(!parsed.name) {
+                  parsed.name = user.displayName;
+                  localStorage.setItem("tp4_app", JSON.stringify(parsed));
+              }
+          }
+          if(window.updateGreeting) window.updateGreeting();
           await window.pushDataToCloud();
         }
-      } catch(e){}
+      } catch(e) {
+         console.error("Firestore Sync Error:", e);
+         isSyncing = false; // Error aaye toh app atakni nahi chahiye
+      }
     } else {
       currentUser = null;
-      if(!appData.name) {
+      isSyncing = false;
+      // Sirf tab modal dikhao jab app mein naam save na ho
+      let localAppStr = localStorage.getItem("tp4_app");
+      let hasName = false;
+      if (localAppStr) hasName = !!(JSON.parse(localAppStr).name);
+      
+      if (!hasName) {
          document.getElementById('nameModal').style.display = 'flex';
       }
     }
   });
+
+  window.pushDataToCloud = async () => {
+    // SECURITY GUARD: Agar Data PULL ho raha hai, toh PUSH rok do!
+    if (!currentUser || isSyncing) return; 
+    
+    try {
+      await setDoc(doc(db, "users", currentUser.uid), {
+        appData: localStorage.getItem("tp4_app") || '',
+        sylData: localStorage.getItem("tp4_syl") || '',
+        daysData: localStorage.getItem("tp4_days") || '',
+        lastUpdated: new Date().toISOString()
+      }, { merge: true });
+    } catch(e) { console.error("Cloud push error:", e); }
+  };
 </script>
 
 <script>
