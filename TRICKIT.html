@@ -690,7 +690,7 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
 <!-- FIREBASE SDKS -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth, signInWithRedirect, GoogleAuthProvider, onAuthStateChanged, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
   import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -707,32 +707,36 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   const db = getFirestore(app);
   const provider = new GoogleAuthProvider();
 
+  // Native app jaisa account chooser
+  provider.setCustomParameters({ prompt: 'select_account' });
+
   let currentUser = null;
-  // SECURITY LOCK: Download hone se pehle khali data upload hone se rokega!
-  let isSyncing = true; 
+  let isSyncing = true; // Lock
 
-  window.handleAuth = () => {
-    signInWithRedirect(auth, provider);
+  window.handleAuth = async () => {
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error("Login Error:", error);
+      if(error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
+          alert("Error: Kripya is link ko direct Google Chrome app me open karein.");
+      }
+    }
   };
-
-  getRedirectResult(auth).catch((error) => {
-    console.error("Redirect Error:", error);
-  });
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       currentUser = user;
       document.getElementById('nameModal').style.display = 'none';
-      
+
       try {
         const userRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(userRef);
 
         if (docSnap.exists()) {
-          // --- STEP 1: CLOUD SE DATA DOWNLOAD KARO ---
           const cloudData = docSnap.data();
           let dataChanged = false;
-          
+
           if(cloudData.appData && cloudData.appData !== localStorage.getItem("tp4_app")) {
              localStorage.setItem("tp4_app", cloudData.appData);
              dataChanged = true;
@@ -746,7 +750,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
              dataChanged = true;
           }
 
-          // Naam save karo bina Firebase ko bataye (taki overwrite na ho)
           let localAppStr = localStorage.getItem("tp4_app");
           if (localAppStr) {
               let localAppObj = JSON.parse(localAppStr);
@@ -757,21 +760,17 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
               }
           }
 
-          // Download success! Ab permission open kardo.
-          isSyncing = false; 
+          isSyncing = false;
 
-          // Agar naya data download hua hai, toh app ko ek baar refresh kardo dikhane ke liye
           if (dataChanged && !sessionStorage.getItem('justSynced')) {
              sessionStorage.setItem('justSynced', 'true');
-             location.reload(); 
+             location.reload();
           } else {
              sessionStorage.removeItem('justSynced');
           }
-          
+
         } else {
-          // --- STEP 2: NAYA USER HAI TOH DATABASE CREATE KARO ---
           isSyncing = false;
-          
           let appDataLocal = localStorage.getItem("tp4_app");
           if(appDataLocal) {
               let parsed = JSON.parse(appDataLocal);
@@ -785,16 +784,15 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
         }
       } catch(e) {
          console.error("Firestore Sync Error:", e);
-         isSyncing = false; // Error aaye toh app atakni nahi chahiye
+         isSyncing = false;
       }
     } else {
       currentUser = null;
       isSyncing = false;
-      // Sirf tab modal dikhao jab app mein naam save na ho
       let localAppStr = localStorage.getItem("tp4_app");
       let hasName = false;
       if (localAppStr) hasName = !!(JSON.parse(localAppStr).name);
-      
+
       if (!hasName) {
          document.getElementById('nameModal').style.display = 'flex';
       }
@@ -802,9 +800,7 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   });
 
   window.pushDataToCloud = async () => {
-    // SECURITY GUARD: Agar Data PULL ho raha hai, toh PUSH rok do!
-    if (!currentUser || isSyncing) return; 
-    
+    if (!currentUser || isSyncing) return;
     try {
       await setDoc(doc(db, "users", currentUser.uid), {
         appData: localStorage.getItem("tp4_app") || '',
