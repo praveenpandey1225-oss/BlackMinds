@@ -687,9 +687,10 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   </nav>
 </div>
 
+<!-- FIREBASE SDKS -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
   import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -708,14 +709,10 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
 
   let currentUser = null;
 
-  // signInWithRedirect works best on mobile browsers to prevent cancelled-popup errors
-  window.handleAuth = () => {
-    signInWithRedirect(auth, provider);
-  };
-
-  // Check if user just came back from Google Login page
-  getRedirectResult(auth).then(async (result) => {
-    if (result && result.user) {
+  // FIXED POPUP LOGIN
+  window.handleAuth = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
       currentUser = result.user;
       
       if(!appData.name || appData.name !== currentUser.displayName) {
@@ -726,13 +723,17 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
       
       document.getElementById('nameModal').style.display = 'none';
       await syncDataWithFirebase();
+    } catch (error) {
+      console.error(error);
+      if (error.code === 'auth/popup-blocked') {
+        alert("Popup block ho gaya! Ise kisi browser app (Chrome/Safari) mein kholo, WhatsApp ke andar nahi.");
+      } else if (error.code !== 'auth/cancelled-popup-request' && error.code !== 'auth/popup-closed-by-user') {
+        alert("Login Error: " + error.message);
+      }
     }
-  }).catch((error) => {
-    console.error("Auth Error:", error);
-    alert("Login Error: " + error.message + "\n\nMake sure praveenpandey1225-oss.github.io is added to Authorized Domains in Firebase Console.");
-  });
+  };
 
-  // Sync Local Storage to Firebase
+  // SYNC LOGIC
   async function syncDataWithFirebase() {
     if (!currentUser) return;
     try {
@@ -748,7 +749,10 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
       } else {
         await window.pushDataToCloud();
       }
-    } catch(e) { console.error("Sync error:", e); }
+    } catch(e) { 
+      console.error("Firestore Error:", e); 
+      alert("Error: Data sync nahi hua! Lagta hai Firebase Console mein 'Firestore Database' create nahi kiya hai. Pehle use banayein.");
+    }
   }
 
   window.pushDataToCloud = async () => {
@@ -760,17 +764,32 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
         daysData: localStorage.getItem(K.days) || '',
         lastUpdated: new Date().toISOString()
       });
-      console.log("Data synced to Firebase.");
     } catch(e) { console.error("Cloud push error:", e); }
   };
 
-  onAuthStateChanged(auth, (user) => {
+  // LISTEN TO AUTH STATE
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
       currentUser = user;
-      // Also hide modal if user is already logged in
       document.getElementById('nameModal').style.display = 'none';
+      if(!appData.name) {
+        appData.name = user.displayName;
+        saveApp();
+        updateGreeting();
+      }
+      
+      try {
+        const userRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(userRef);
+        if (!docSnap.exists()) {
+          await window.pushDataToCloud();
+        }
+      } catch(e){}
     } else {
       currentUser = null;
+      if(!appData.name) {
+         document.getElementById('nameModal').style.display = 'flex';
+      }
     }
   });
 </script>
@@ -835,8 +854,7 @@ window.onload=()=>{
   const d=new Date();
   document.getElementById('dateDisplay').innerText=d.toLocaleDateString('en-US',{weekday:'long',day:'numeric',month:'short'});
   
-  if(!appData.name)document.getElementById('nameModal').style.display='flex';
-  else updateGreeting();
+  if(appData.name) updateGreeting();
   
   renderNotes();
   renderTodos();
