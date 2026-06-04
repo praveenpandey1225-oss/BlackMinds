@@ -443,6 +443,26 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   </div>
 </div>
 
+<!-- NAYE MODALS ADD KIYE GAYE HAIN TRICKS WALE KE LIYE -->
+<div class="modal-overlay" id="addGroupModal">
+  <div class="modal-box"><h3>New Trick Group</h3>
+    <input class="modal-inp" id="groupTitleInp" placeholder="Combination Title..." autocomplete="off">
+    <div class="modal-actions">
+      <button class="btn-m btn-cancel-m" onclick="closeModal('addGroupModal')">Cancel</button>
+      <button class="btn-m btn-save-m" onclick="saveNewGroup()">Create</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="editGroupModal">
+  <div class="modal-box"><h3>Edit Title</h3>
+    <input class="modal-inp" id="editGroupTitleInp" placeholder="New Title..." autocomplete="off">
+    <div class="modal-actions">
+      <button class="btn-m btn-cancel-m" onclick="closeModal('editGroupModal')">Cancel</button>
+      <button class="btn-m btn-save-m" onclick="saveEditGroup()">Update</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="themeModal">
   <div class="theme-panel">
     <h3>Choose Theme</h3>
@@ -686,8 +706,8 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
         <div id="todoList"></div>
         <div class="todo-add-row">
           <div class="checkbox"></div>
-          <input type="text" id="newTodo" placeholder="Add a trick or idea..." onkeypress="checkTodo(event)" autocomplete="off">
-          <button onclick="addTrickGroup()" style="background:none;border:none;color:var(--accent);font-weight:bold;cursor:pointer;font-size:13px;margin-left:5px;font-family:'Inter',sans-serif">+ Group</button>
+          <input type="text" id="newTodo" placeholder="Add a trick or idea..." autocomplete="off">
+          <button onclick="openAddGroupModal()" style="background:none;border:none;color:var(--accent);font-weight:bold;cursor:pointer;font-size:13px;margin-left:5px;font-family:'Inter',sans-serif">+ Group</button>
         </div>
       </div>
     </div>
@@ -847,6 +867,7 @@ let pomoTotalSecs=25*60,pomoRemaining=25*60,pomoSessions=0;
 let currentTheme='', darkTheme='',lightTheme='th-arctic';
 let confirmCallback=null;
 let todoColorTarget=null;
+let editingGroupIdx=null;
 
 const LIGHT_THEMES=['th-arctic','th-paper','th-rose','th-mint','th-sand','th-lavender','th-coral','th-sakura'];
 const PALETTE=['#4834d4','#6ab04c','#eb4d4b','#be2edd','#f0932b','#22a6b3','#ff7979','#badc58','#7ed6df','#e056fd','#686de0','#30336b','#f19066','#c44569','#546de5','#3dc1d3','#f78fb3','#e15f41','#95afc0','#574b90'];
@@ -991,7 +1012,7 @@ function toggleMode(){
 }
 function openThemeModal(){buildThemeGrid();document.getElementById('themeModal').style.display='flex';}
 function closeModal(id){document.getElementById(id).style.display='none';}
-window.onpopstate=()=>{['editorSheet','detailModal','dateModal','brainModal','dailyModal','themeModal','sylInputModal','pasteModal','editItemModal','cdModeModal'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});};
+window.onpopstate=()=>{['editorSheet','detailModal','dateModal','brainModal','dailyModal','themeModal','sylInputModal','pasteModal','editItemModal','cdModeModal','addGroupModal','editGroupModal'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});};
 
 /* ─── NAME + WAVE ─── */
 function saveName(){
@@ -1281,46 +1302,75 @@ function isCanvasBlank(canvas) {
 
 /* ─── TRICKS/TODOS ─── */
 function renderTodos(){
-  const l=document.getElementById('todoList');l.innerHTML='';
-  appData.todos.forEach((t,i)=>{
+  const l = document.getElementById('todoList');
+  l.innerHTML = '';
+  appData.todos.forEach((t, i) => {
     if(t.isGroup) {
-      const row=document.createElement('div');
-      row.className='todo-group'+(t.hard?' red-mark':'');
-      row.style.marginBottom = '6px';
-      row.style.borderRadius = '12px';
-      row.style.overflow = 'hidden';
-      row.style.border = '1px solid var(--border2)';
-      if(t.color && t.color!=='transparent'){
-        row.style.background = hexRgba(t.color, 0.15);
-        row.style.borderColor = hexRgba(t.color, 0.4);
-      } else {
-        row.style.background = 'var(--input-bg)';
-      }
-
+      // 1. Group Header (Title & Progress Ring)
       const header = document.createElement('div');
-      header.style.cssText = 'display:flex;align-items:center;padding:11px 12px;cursor:pointer;position:relative';
-      longPress(header,()=>showDelOverlay(header,()=>deleteTodoItem(i)));
+      header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:12px 4px 8px;margin-top:14px;border-bottom:1px solid var(--border2);margin-bottom:8px';
+      
+      let doneCount = 0;
+      let totalCount = t.items ? t.items.length : 0;
+      if (t.items) t.items.forEach(it => { if(it.done) doneCount++; });
+      let pct = totalCount === 0 ? 0 : Math.round((doneCount/totalCount)*100);
+
+      let strokeCol = (t.color && t.color!=='transparent') ? t.color : 'var(--accent)';
+
+      header.innerHTML = `
+        <div style="font-weight:900;font-size:16px;color:var(--text);display:flex;align-items:center;gap:6px">
+           ${t.title}
+           <button style="background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;display:flex;align-items:center;" onclick="editGroupTitle(${i})">
+             <svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><use href="#i-pen"/></svg>
+           </button>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+            <div class="group-progress" style="width:30px;height:30px;position:relative;display:flex;align-items:center;justify-content:center;">
+                <svg viewBox="0 0 36 36" style="width:100%;height:100%;transform:rotate(-90deg);position:absolute;inset:0;">
+                   <circle cx="18" cy="18" r="15.915" style="fill:none;stroke:var(--border2);stroke-width:3;stroke-linecap:round;" />
+                   <circle cx="18" cy="18" r="15.915" style="fill:none;stroke:${strokeCol};stroke-width:3;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:${100-pct};transition:all 0.3s;" />
+                </svg>
+                <span style="font-size:9px;font-weight:900;color:var(--text);z-index:1;">${pct}%</span>
+            </div>
+        </div>
+      `;
+      
+      longPress(header,()=>showDelOverlay(header,async()=>{
+        const ok=await showConfirm('Delete Combination', 'Delete this combination and all its tricks?', '🗑️');
+        if(ok) deleteTodoItem(i);
+      }));
+      // Swipe right on header changes color for ALL items inside this group
       addSwipeRight(header,()=>openTodoColorPop(i,header));
+      l.appendChild(header);
 
-      header.innerHTML = `<div style="flex:1;font-weight:800;font-size:14px;color:var(--text)">${t.title}</div><button style="background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;" onclick="editGroupTitle(${i})"><svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><use href="#i-pen"/></svg></button>`;
-      row.appendChild(header);
-
-      const itemsContainer = document.createElement('div');
-      itemsContainer.style.cssText = 'padding:0 12px 8px 12px;';
+      // 2. Normal Items inside Group (Independent appearance)
       (t.items || []).forEach((st, j) => {
-         const stRow = document.createElement('div');
-         stRow.style.cssText = 'display:flex;align-items:center;gap:10px;padding:6px 0;';
-         stRow.innerHTML = `<div class="checkbox ${st.done?'done':''}" style="width:18px;height:18px;border-radius:5px" onclick="togGroupTodo(${i},${j})">${st.done?'<svg style="width:9px;height:9px;stroke:white;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round"><use href="#i-check"/></svg>':''}</div><div class="todo-text ${st.done?'done':''}" style="font-size:13px">${st.txt}</div><button style="background:none;border:none;color:var(--red);opacity:0.6;font-size:16px;cursor:pointer;padding:0 4px" onclick="delGroupTodo(${i},${j})">×</button>`;
-         itemsContainer.appendChild(stRow);
+         const row = document.createElement('div');
+         row.className = 'todo-item' + (st.hard?' red-mark':'');
+         
+         if(t.color && t.color!=='transparent'){
+           row.style.background = hexRgba(t.color, 0.15);
+           row.style.border = '1px solid ' + hexRgba(t.color, 0.4);
+         }
+         
+         row.innerHTML = `
+           <div class="checkbox ${st.done?'done':''}" onclick="togGroupTodo(${i},${j})">${st.done?'<svg style="width:11px;height:11px;stroke:white;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round"><use href="#i-check"/></svg>':''}</div>
+           <div class="todo-text ${st.done?'done':''}">${st.txt}</div>
+           <button style="background:none;border:none;color:var(--red);opacity:0.6;font-size:18px;cursor:pointer;padding:0 8px;font-weight:bold;display:flex;align-items:center;justify-content:center;" onclick="delGroupTodo(${i},${j})">×</button>
+         `;
+         l.appendChild(row);
       });
-      const addSub = document.createElement('div');
-      addSub.style.cssText = 'display:flex;align-items:center;gap:10px;padding:6px 0;margin-top:4px;border-top:1px dashed var(--border2)';
-      addSub.innerHTML = `<div class="checkbox" style="width:18px;height:18px;border-radius:5px;opacity:0.3"></div><input type="text" placeholder="Add trick to ${t.title}..." style="border:none;background:none;outline:none;color:var(--text);font-size:13px;flex:1;font-family:'Inter',sans-serif" onkeypress="checkGroupTodo(event, ${i})">`;
-      itemsContainer.appendChild(addSub);
 
-      row.appendChild(itemsContainer);
-      l.appendChild(row);
+      // 3. Independent Add Row for the Group
+      const addRow = document.createElement('div');
+      addRow.className = 'todo-add-row';
+      addRow.style.marginBottom = '12px';
+      addRow.style.borderTop = 'none';
+      addRow.innerHTML = `<div class="checkbox" style="opacity:0.3;border-style:dashed;"></div><input type="text" placeholder="Add trick to ${t.title}..." onkeypress="checkGroupTodo(event, ${i})">`;
+      l.appendChild(addRow);
+
     } else {
+      // STANDARD INDEPENDENT TRICK
       const row=document.createElement('div');
       row.className='todo-item'+(t.hard?' red-mark':'');
       
@@ -1356,12 +1406,40 @@ function setTodoColor(idx,color){appData.todos[idx].color=color;saveApp();render
 function checkTodo(e){if(e.key==='Enter'&&e.target.value.trim()){appData.todos.push({txt:e.target.value,done:false,color:'transparent',hard:false});saveApp();renderTodos();e.target.value='';}}
 function togTodo(i){appData.todos[i].done=!appData.todos[i].done;saveApp();renderTodos();}
 function deleteTodoItem(i){appData.todos.splice(i,1);saveApp();renderTodos();}
-/* --- COMBINATION TRICKS EXTENSION --- */
-function addTrickGroup(){const title=prompt("Enter combination title (e.g. Maths Tricks):");if(title&&title.trim()){appData.todos.push({isGroup:true,title:title.trim(),items:[],color:'transparent'});saveApp();renderTodos();}}
-function editGroupTitle(i){const t=prompt("Edit Title:",appData.todos[i].title);if(t&&t.trim()){appData.todos[i].title=t.trim();saveApp();renderTodos();}}
+
+/* --- NEW COMBINATION/GROUP LOGIC --- */
+function openAddGroupModal() {
+  document.getElementById('groupTitleInp').value = '';
+  document.getElementById('addGroupModal').style.display = 'flex';
+  setTimeout(() => document.getElementById('groupTitleInp').focus(), 100);
+}
+function saveNewGroup() {
+  const title = document.getElementById('groupTitleInp').value.trim();
+  if(title) {
+    appData.todos.push({isGroup:true, title:title, items:[], color:'transparent'});
+    saveApp(); renderTodos();
+  }
+  closeModal('addGroupModal');
+}
+function editGroupTitle(i) {
+  editingGroupIdx = i;
+  document.getElementById('editGroupTitleInp').value = appData.todos[i].title;
+  document.getElementById('editGroupModal').style.display = 'flex';
+  setTimeout(() => document.getElementById('editGroupTitleInp').focus(), 100);
+}
+function saveEditGroup() {
+  const title = document.getElementById('editGroupTitleInp').value.trim();
+  if(title && editingGroupIdx !== null) {
+    appData.todos[editingGroupIdx].title = title;
+    saveApp(); renderTodos();
+  }
+  closeModal('editGroupModal');
+  editingGroupIdx = null;
+}
 function checkGroupTodo(e,i){if(e.key==='Enter'&&e.target.value.trim()){if(!appData.todos[i].items)appData.todos[i].items=[];appData.todos[i].items.push({txt:e.target.value.trim(),done:false});saveApp();renderTodos();}}
 function togGroupTodo(i,j){appData.todos[i].items[j].done=!appData.todos[i].items[j].done;saveApp();renderTodos();}
 function delGroupTodo(i,j){appData.todos[i].items.splice(j,1);saveApp();renderTodos();}
+
 
 /* ─── SYLLABUS ─── */
 function setupSylScroll(){
@@ -1665,7 +1743,7 @@ function showDelOverlay(card,delFn){
   ov.onclick=e=>{if(e.target===ov)ov.remove();}; card.appendChild(ov);ov.style.display='flex';
 }
 
-[['sylMInp',()=>sylSaveData()],['editItemInp',()=>saveEditItem()],['nameInp',()=>saveName()],['newDailyGoal',()=>addDailyGoal()],['newActName',()=>addCustomActivity()],['eventInp',()=>addCountdown()],['nListAdd',()=>{}]]
+[['sylMInp',()=>sylSaveData()],['editItemInp',()=>saveEditItem()],['nameInp',()=>saveName()],['newDailyGoal',()=>addDailyGoal()],['newActName',()=>addCustomActivity()],['eventInp',()=>addCountdown()],['nListAdd',()=>{}],['groupTitleInp',()=>saveNewGroup()],['editGroupTitleInp',()=>saveEditGroup()]]
 .forEach(([id,fn])=>{const el=document.getElementById(id);if(el)el.addEventListener('keypress',e=>{if(e.key==='Enter')fn();});});
 </script>
 </body>
