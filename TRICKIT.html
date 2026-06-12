@@ -383,22 +383,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
 .g-btn-modal{width:100%;padding:11px;background:white;color:black;border:none;border-radius:12px;font-weight:800;cursor:pointer;font-size:14px;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;transition:all 0.2s}
 .g-btn-modal:active{transform:scale(0.96)}
 .g-btn-modal img{width:18px;height:18px}
-
-/* ===== QUIZ DYNAMIC UI ===== */
-.quiz-card { padding: 18px; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 12px; }
-.quiz-progress-bar { height: 6px; background: var(--input-bg); border-radius: 4px; overflow: hidden; }
-.quiz-progress-fill { height: 100%; background: var(--accent-grad); width: 0%; transition: width 0.4s ease; border-radius: 4px; }
-.quiz-score-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 800; color: var(--text2); margin-top: 4px; }
-.quiz-question { font-size: 16px; font-weight: 800; color: var(--text); line-height: 1.5; min-height: 60px; margin-bottom: 8px; }
-.quiz-options { display: flex; flex-direction: column; gap: 10px; }
-
-.quiz-opt-btn { background: var(--input-bg); border: 1px solid var(--border2); border-radius: 14px; padding: 14px; font-size: 14px; font-weight: 600; color: var(--text); text-align: left; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif; display: flex; justify-content: space-between; align-items: center; }
-.quiz-opt-btn:active { transform: scale(0.97); background: var(--surface2); }
-.quiz-opt-btn.correct { background: rgba(52, 199, 89, 0.15); border-color: var(--green); color: var(--green); }
-.quiz-opt-btn.wrong { background: rgba(255, 71, 87, 0.15); border-color: var(--red); color: var(--red); }
-
-.quiz-result-box { text-align: center; padding: 20px 0; animation: secIn 0.4s cubic-bezier(0.34,1.4,0.64,1); }
-.quiz-result-score { font-size: 48px; font-weight: 900; background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0; }
 </style>
 </head>
 <body>
@@ -425,7 +409,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   <symbol id="i-pin" viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></symbol>
   <symbol id="i-list" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></symbol>
   <symbol id="i-draw" viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></symbol>
-  <symbol id="i-quiz" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></symbol>
 </svg>
 
 <div class="blobs"><div class="blob blob1"></div><div class="blob blob2"></div><div class="blob blob3"></div></div>
@@ -460,6 +443,7 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   </div>
 </div>
 
+<!-- NAYE MODALS ADD KIYE GAYE HAIN TRICKS WALE KE LIYE -->
 <div class="modal-overlay" id="addGroupModal">
   <div class="modal-box"><h3>New Trick Group</h3>
     <input class="modal-inp" id="groupTitleInp" placeholder="Combination Title..." autocomplete="off">
@@ -727,28 +711,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
         </div>
       </div>
     </div>
-    <div class="section" id="sec-quiz">
-      <div class="sec-sticky">
-        <div class="hdr-row"><div class="sec-sticky-title">Quiz Generator</div></div>
-      </div>
-      
-      <div id="quizSetupView" class="glass" style="padding:18px; display:flex; flex-direction:column; gap:14px;">
-        <p style="font-size:14px; font-weight:700; color:var(--text);">Idioms ka text yahan paste karein:</p>
-        <textarea id="quizPasteArea" class="modal-inp modal-ta" style="height:200px; text-align:left; font-size:13px; line-height:1.5;" placeholder="**1. Beat about the bush** (Ghuma firakar...&#10;* **Trick:** Jhaadi ke aaspas..."></textarea>
-        <button class="pomo-btn pomo-start" style="width:100%; justify-content:center; padding:14px;" onclick="generateQuiz()">Create Quiz</button>
-      </div>
-
-      <div id="quizPlayView" class="quiz-card glass" style="display:none;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-            <button onclick="backToGenerator()" style="background:none;border:none;color:var(--text2);font-weight:700;font-size:13px;cursor:pointer;">← Back</button>
-        </div>
-        <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgress"></div></div>
-        <div class="quiz-score-row"><span class="quiz-qnum" id="quizQNum"></span><span class="quiz-score" id="quizScoreText">Score: 0</span></div>
-        <div class="quiz-question" id="quizQuestion">Loading...</div>
-        <div class="quiz-options" id="quizOptions"></div>
-        <button class="pomo-btn pomo-start" id="nextQuizBtn" style="display:none; width:100%; justify-content:center; margin-top:12px;" onclick="nextQuestion()">Next Question</button>
-      </div>
-    </div>
   </div>
 
   <button class="fab" id="fabBtn" onclick="openEditor()"><svg style="width:21px;height:21px;stroke:white;fill:none;stroke-width:2.8;stroke-linecap:round"><use href="#i-plus"/></svg></button>
@@ -759,7 +721,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
     <div class="tab" onclick="switchTab('syllabus',this)"><svg><use href="#i-book"/></svg><span>Syllabus</span></div>
     <div class="tab" onclick="switchTab('pomo',this)"><svg><use href="#i-timer"/></svg><span>Focus</span></div>
     <div class="tab" onclick="switchTab('tricks',this)"><svg><use href="#i-bulb"/></svg><span>Tricks</span></div>
-    <div class="tab" onclick="switchTab('quiz',this)"><svg><use href="#i-quiz"/></svg><span>Quiz</span></div>
   </nav>
 </div>
 
@@ -1780,160 +1741,6 @@ function showDelOverlay(card,delFn){
   ov.innerHTML=`<button class="del-btn-big"><svg style="width:20px;height:20px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><use href="#i-trash"/></svg></button>`;
   ov.querySelector('.del-btn-big').onclick=e=>{e.stopPropagation();delFn();ov.remove();};
   ov.onclick=e=>{if(e.target===ov)ov.remove();}; card.appendChild(ov);ov.style.display='flex';
-}
-
-/* ─── DYNAMIC QUIZ LOGIC ─── */
-let dynamicQuizData = [];
-let currentQ = 0;
-let quizScore = 0;
-let quizCompleted = false;
-
-function generateQuiz() {
-  const rawText = document.getElementById('quizPasteArea').value;
-  const lines = rawText.split('\n');
-  const items = [];
-  let currentItem = null;
-
-  // Parser: Text ko padh kar Idiom aur Trick nikalna
-  for (let line of lines) {
-    if (line.includes('**') && line.match(/\*\*\d+\./)) {
-      if (currentItem && currentItem.trick) items.push(currentItem);
-      currentItem = { idiom: '', trick: '' };
-      let idiomMatch = line.match(/\*\*\d+\.\s+([^*]+)\*\*/);
-      if (idiomMatch) currentItem.idiom = idiomMatch[1].trim();
-    } else if (line.includes('**Trick:**')) {
-      if (currentItem) {
-        currentItem.trick = line.replace(/.*?\*\*Trick:\*\*/, '').trim();
-      }
-    }
-  }
-  if (currentItem && currentItem.trick) items.push(currentItem);
-
-  if (items.length < 4) {
-    alert("Bhai, kam se kam 4 idioms dalo jisme '**Trick:**' likha ho taaki 4 options ban sake!");
-    return;
-  }
-
-  // Question array banana
-  dynamicQuizData = items.map((item, index) => {
-    // 3 Galat options random uthana
-    let wrongOpts = items.filter((_, i) => i !== index).sort(() => 0.5 - Math.random()).slice(0, 3).map(x => x.idiom);
-    let options = [...wrongOpts, item.idiom].sort(() => 0.5 - Math.random());
-    let correctIdx = options.indexOf(item.idiom);
-
-    return {
-      question: `Is trick ka sahi idiom pehchano:\n\n"${item.trick}"`,
-      options: options,
-      correct: correctIdx
-    };
-  });
-
-  // Questions ko shuffle karna
-  dynamicQuizData.sort(() => 0.5 - Math.random());
-
-  // UI switch karna
-  document.getElementById('quizSetupView').style.display = 'none';
-  document.getElementById('quizPlayView').style.display = 'flex';
-  
-  currentQ = 0;
-  quizScore = 0;
-  quizCompleted = false;
-  loadQuizQuestion();
-}
-
-function backToGenerator() {
-  document.getElementById('quizPlayView').style.display = 'none';
-  document.getElementById('quizSetupView').style.display = 'flex';
-}
-
-function loadQuizQuestion() {
-  if (quizCompleted) return;
-  const qData = dynamicQuizData[currentQ];
-  document.getElementById('quizQNum').innerText = `Question ${currentQ + 1}/${dynamicQuizData.length}`;
-  document.getElementById('quizProgress').style.width = `${((currentQ) / dynamicQuizData.length) * 100}%`;
-  document.getElementById('quizQuestion').innerText = qData.question;
-  document.getElementById('quizScoreText').innerText = `Score: ${quizScore}`;
-  
-  const optsContainer = document.getElementById('quizOptions');
-  optsContainer.innerHTML = '';
-  
-  qData.options.forEach((opt, index) => {
-    const btn = document.createElement('button');
-    btn.className = 'quiz-opt-btn';
-    btn.innerText = opt;
-    btn.onclick = () => checkQuizAnswer(index, btn);
-    optsContainer.appendChild(btn);
-  });
-  
-  document.getElementById('nextQuizBtn').style.display = 'none';
-}
-
-function checkQuizAnswer(selectedIndex, btnElement) {
-  const correctIndex = dynamicQuizData[currentQ].correct;
-  const allBtns = document.querySelectorAll('.quiz-opt-btn');
-  
-  allBtns.forEach(b => b.style.pointerEvents = 'none');
-  
-  if (selectedIndex === correctIndex) {
-    btnElement.classList.add('correct');
-    btnElement.innerHTML += ' <span>✓</span>';
-    quizScore++;
-    document.getElementById('quizScoreText').innerText = `Score: ${quizScore}`;
-  } else {
-    btnElement.classList.add('wrong');
-    btnElement.innerHTML += ' <span>×</span>';
-    allBtns[correctIndex].classList.add('correct');
-    allBtns[correctIndex].innerHTML += ' <span>✓</span>';
-  }
-  
-  document.getElementById('nextQuizBtn').style.display = 'flex';
-}
-
-function nextQuestion() {
-  currentQ++;
-  if (currentQ < dynamicQuizData.length) {
-    loadQuizQuestion();
-  } else {
-    showDynamicQuizResult();
-  }
-}
-
-function showDynamicQuizResult() {
-  quizCompleted = true;
-  document.getElementById('quizProgress').style.width = '100%';
-  const container = document.getElementById('quizPlayView');
-  
-  container.innerHTML = `
-    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-      <button onclick="backToGenerator()" style="background:none;border:none;color:var(--text2);font-weight:700;font-size:13px;cursor:pointer;">← Back</button>
-    </div>
-    <div class="quiz-result-box">
-      <h2>Quiz Completed!</h2>
-      <div class="quiz-result-score">${quizScore}/${dynamicQuizData.length}</div>
-      <p style="color:var(--text2); font-size: 14px; margin-bottom: 20px;">Tricks se yaad hua na?</p>
-      <button class="pomo-btn pomo-start" style="width: 100%; justify-content:center;" onclick="restartDynamicQuiz()">Play Again</button>
-    </div>
-  `;
-}
-
-function restartDynamicQuiz() {
-  document.getElementById('quizPlayView').innerHTML = `
-    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-        <button onclick="backToGenerator()" style="background:none;border:none;color:var(--text2);font-weight:700;font-size:13px;cursor:pointer;">← Back</button>
-    </div>
-    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgress"></div></div>
-    <div class="quiz-score-row"><span class="quiz-qnum" id="quizQNum"></span><span class="quiz-score" id="quizScoreText">Score: 0</span></div>
-    <div class="quiz-question" id="quizQuestion"></div>
-    <div class="quiz-options" id="quizOptions"></div>
-    <button class="pomo-btn pomo-start" id="nextQuizBtn" style="display:none; width:100%; justify-content:center; margin-top:12px;" onclick="nextQuestion()">Next Question</button>
-  `;
-  currentQ = 0;
-  quizScore = 0;
-  quizCompleted = false;
-  
-  // Naye questions order ke liye fir se shuffle kar dete hain
-  dynamicQuizData.sort(() => 0.5 - Math.random());
-  loadQuizQuestion();
 }
 
 [['sylMInp',()=>sylSaveData()],['editItemInp',()=>saveEditItem()],['nameInp',()=>saveName()],['newDailyGoal',()=>addDailyGoal()],['newActName',()=>addCustomActivity()],['eventInp',()=>addCountdown()],['nListAdd',()=>{}],['groupTitleInp',()=>saveNewGroup()],['editGroupTitleInp',()=>saveEditGroup()]]
