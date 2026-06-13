@@ -129,26 +129,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
 .note-date{font-size:10px;opacity:0.36;font-weight:600;margin-top:4px}
 .note-pin-icon{width:12px;height:12px;fill:var(--accent);flex-shrink:0;}
 
-/* TRICKS (formerly Ideas) */
-#sec-tricks .glass{padding:13px}
-.todo-item{display:flex;align-items:center;gap:10px;padding:11px 12px;background:var(--input-bg);margin-bottom:6px;border-radius:12px;border:1px solid var(--border2);position:relative;transition:all 0.2s;cursor:default}
-.todo-item.red-mark{background:rgba(255,71,87,0.12);border-color:rgba(255,71,87,0.3)}
-.todo-color-stripe{position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:2px 0 0 2px}
-.checkbox{width:22px;height:22px;border-radius:7px;border:2px solid var(--text3);display:flex;align-items:center;justify-content:center;transition:all 0.18s;flex-shrink:0}
-.checkbox.done{background:var(--green);border-color:var(--green)}
-.checkbox svg{width:11px;height:11px;stroke:white;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;display:none}
-.checkbox.done svg{display:block}
-.todo-text{flex:1;font-weight:600;font-size:14px;color:var(--text)}
-.todo-text.done{text-decoration:line-through;opacity:0.38}
-.todo-add-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:none;border-top:1px solid var(--border2);margin-top:4px}
-.todo-add-row input{border:none;background:none;outline:none;width:100%;font-size:15px;color:var(--text);font-family:'Inter',sans-serif;font-weight:500}
-.todo-add-row input::placeholder{color:var(--text3)}
-
-/* Swipe colour picker */
-.color-picker-pop{position:fixed;bottom:118px;left:50%;transform:translateX(-50%);background:var(--modal-bg);border:1px solid var(--border);border-radius:18px;padding:12px 14px;display:flex;gap:9px;z-index:4000;box-shadow:0 8px 28px rgba(0,0,0,0.4);animation:popIn 0.2s cubic-bezier(0.34,1.56,0.64,1)}
-.cp-dot{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid rgba(255,255,255,0.16);transition:transform 0.18s}
-.cp-dot:active{transform:scale(0.84)}
-
 /* SYLLABUS */
 .syl-carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
 .syl-carousel::-webkit-scrollbar{display:none}
@@ -210,11 +190,9 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
 .syl-btn{flex:1;height:42px;border-radius:13px;border:none;font-weight:800;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;transition:transform 0.18s}
 .syl-btn:active{transform:scale(0.94)}
 .btn-new-sub{background:var(--accent-grad);color:white;box-shadow:0 4px 12px rgba(0,122,255,0.26)}
-/* Updated: White gradient for Time Log, Red Gradient for Goals */
 .btn-brain-s{background:linear-gradient(135deg, #ffffff, #e0e0e0) !important;color:#111 !important;border:none !important;box-shadow:0 4px 12px rgba(255,255,255,0.2) !important;}
-.btn-daily-s{background:linear-gradient(135deg, #ff4757, #ff6b81) !important;color:#fff !important;border:none !important;box-shadow:0 4px 12px rgba(255,71,87,0.26) !important;}
 
-/* TIMER */
+/* TIMER & NEW FOCUS TOOLS */
 .pomo-card{background:var(--surface);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:24px;padding:20px;text-align:center;box-shadow:var(--card-shadow)}
 .pomo-tabs{display:flex;gap:5px;margin-bottom:14px;justify-content:center;flex-wrap:wrap}
 .pomo-tab{padding:5px 12px;border-radius:50px;border:1px solid var(--border);background:transparent;font-size:12px;font-weight:700;cursor:pointer;color:var(--text2);font-family:'Inter',sans-serif;transition:all 0.2s}
@@ -238,6 +216,16 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
 .s-dots{display:flex;gap:5px;justify-content:center;margin-top:5px}
 .s-dot{width:9px;height:9px;border-radius:50%;background:var(--text3);transition:background 0.3s}
 .s-dot.done{background:var(--accent)}
+
+/* FOCUS TOOL TABS & NEW UI */
+.tool-tab { flex:1; padding:9px; border-radius:10px; border:none; background:transparent; color:var(--text2); font-weight:700; cursor:pointer; transition:all 0.2s; font-family:'Inter',sans-serif; font-size:12px; }
+.tool-tab.active { background:var(--surface); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,0.2); border: 1px solid var(--border); }
+.sw-time { font-size:46px; font-weight:900; color:var(--text); letter-spacing:-1px; margin:20px 0; font-variant-numeric: tabular-nums; display:flex; justify-content:center;}
+.wc-row { display:flex; justify-content:space-between; align-items:center; padding:14px 10px; border-bottom:1px solid var(--border2); }
+.wc-row:last-child { border:none; }
+.wc-city { font-weight:800; font-size:14px; color:var(--text); }
+.wc-time { font-weight:900; font-size:16px; color:var(--accent); font-variant-numeric: tabular-nums; }
+.wc-date { font-size:11px; color:var(--text2); font-weight:600; margin-top:4px;}
 
 /* DEL OVERLAY */
 .del-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.62);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;border-radius:inherit;z-index:20;animation:fadeIn 0.18s}
@@ -443,26 +431,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   </div>
 </div>
 
-<!-- NAYE MODALS ADD KIYE GAYE HAIN TRICKS WALE KE LIYE -->
-<div class="modal-overlay" id="addGroupModal">
-  <div class="modal-box"><h3>New Trick Group</h3>
-    <input class="modal-inp" id="groupTitleInp" placeholder="Combination Title..." autocomplete="off">
-    <div class="modal-actions">
-      <button class="btn-m btn-cancel-m" onclick="closeModal('addGroupModal')">Cancel</button>
-      <button class="btn-m btn-save-m" onclick="saveNewGroup()">Create</button>
-    </div>
-  </div>
-</div>
-<div class="modal-overlay" id="editGroupModal">
-  <div class="modal-box"><h3>Edit Title</h3>
-    <input class="modal-inp" id="editGroupTitleInp" placeholder="New Title..." autocomplete="off">
-    <div class="modal-actions">
-      <button class="btn-m btn-cancel-m" onclick="closeModal('editGroupModal')">Cancel</button>
-      <button class="btn-m btn-save-m" onclick="saveEditGroup()">Update</button>
-    </div>
-  </div>
-</div>
-
 <div class="modal-overlay" id="themeModal">
   <div class="theme-panel">
     <h3>Choose Theme</h3>
@@ -598,28 +566,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   </div>
 </div>
 
-<div class="modal-overlay" id="dailyModal">
-  <div class="big-modal">
-    <button class="back-btn" onclick="closeModal('dailyModal')"><svg><use href="#i-back"/></svg></button>
-    <div class="big-modal-scroll">
-      <h3 style="text-align:center;font-size:16px;font-weight:900;margin-bottom:0">Goals Tracker</h3>
-      <div class="day-nav" id="goalDayNav"></div>
-      <button class="overall-btn" onclick="showOverallGoals()">View Overall Stats</button>
-      
-      <div class="water-wrap" style="transform:scale(0.75);margin-top:-12px;margin-bottom:0">
-        <div class="water-circle"><div class="water-wave" id="dailyWave" style="background:linear-gradient(to top,#FFD60A,#FF9F0A)"></div><span class="water-pct" id="dailyPct">0%</span></div>
-      </div>
-      
-      <div class="capsule-box" style="margin-bottom:12px" id="addGoalBox">
-        <input type="text" id="newDailyGoal" class="act-name-inp" placeholder="Enter task...">
-        <button class="btn-add-cap" style="background:linear-gradient(135deg,#FFD60A,#FF9F0A)" onclick="addDailyGoal()">+</button>
-      </div>
-      <div id="dailyGoalList"></div>
-    </div>
-  </div>
-</div>
-
-<div class="color-picker-pop" id="todoColorPop" style="display:none"></div>
 
 <div class="app">
   <div class="header" id="mainHeader">
@@ -656,7 +602,6 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
       <div class="syl-btns-row">
         <button class="syl-btn btn-new-sub" onclick="openSylModal('subject')">+ Subject</button>
         <button class="syl-btn btn-brain-s" onclick="openBrainModal()">Time Log</button>
-        <button class="syl-btn btn-daily-s" onclick="openDailyModal()">Goals</button>
       </div>
 
       <div class="syl-dots" id="sylDots"></div>
@@ -667,7 +612,13 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
       <div class="sec-sticky">
         <div class="hdr-row"><div class="sec-sticky-title">Focus</div></div>
       </div>
-      <div class="pomo-card">
+      <div style="display:flex;gap:6px;margin-bottom:12px;background:var(--input-bg);padding:5px;border-radius:14px;border:1px solid var(--border2)">
+        <button class="tool-tab active" onclick="switchFocusTool('pomo',this)">Pomodoro</button>
+        <button class="tool-tab" onclick="switchFocusTool('stopwatch',this)">Stopwatch</button>
+        <button class="tool-tab" onclick="switchFocusTool('worldclock',this)">World Clock</button>
+      </div>
+
+      <div id="pomo-container" class="pomo-card">
         <div class="pomo-tabs">
           <button class="pomo-tab active" onclick="setPomoMode('focus',25,this)">Focus</button>
           <button class="pomo-tab" onclick="setPomoMode('short',5,this)">Short Break</button>
@@ -696,19 +647,59 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
         <div class="pomo-sess">Sessions today</div>
         <div class="s-dots" id="sessionDots"></div>
       </div>
+
+      <div id="stopwatch-container" class="pomo-card" style="display:none">
+        <div class="pomo-lbl" style="margin-bottom:10px">STOPWATCH</div>
+        <div class="sw-time" id="swTime">00:00:00.00</div>
+        <div class="pomo-btns" style="margin-top:20px">
+          <button class="pomo-btn pomo-reset" onclick="resetStopwatch()">
+            <svg style="width:15px;height:15px;stroke:var(--text2);fill:none;stroke-width:2;stroke-linecap:round"><use href="#i-refresh"/></svg>
+            Reset
+          </button>
+          <button class="pomo-btn pomo-start" id="swStartBtn" onclick="toggleStopwatch()">
+            <svg style="width:14px;height:14px;fill:white;stroke:none"><use href="#i-play"/></svg>
+            Start
+          </button>
+        </div>
+      </div>
+
+      <div id="worldclock-container" class="pomo-card" style="display:none; padding:10px;">
+        <div class="wc-row" id="wc-local">
+          <div style="text-align:left"><div class="wc-city">Local Time</div><div class="wc-date">--</div></div>
+          <div class="wc-time">--:--</div>
+        </div>
+        <div class="wc-row" id="wc-ny">
+          <div style="text-align:left"><div class="wc-city">New York</div><div class="wc-date">--</div></div>
+          <div class="wc-time">--:--</div>
+        </div>
+        <div class="wc-row" id="wc-lon">
+          <div style="text-align:left"><div class="wc-city">London</div><div class="wc-date">--</div></div>
+          <div class="wc-time">--:--</div>
+        </div>
+        <div class="wc-row" id="wc-tokyo">
+          <div style="text-align:left"><div class="wc-city">Tokyo</div><div class="wc-date">--</div></div>
+          <div class="wc-time">--:--</div>
+        </div>
+      </div>
     </div>
 
-    <div class="section" id="sec-tricks">
+    <div class="section" id="sec-goals">
       <div class="sec-sticky">
-        <div class="hdr-row"><div class="sec-sticky-title">Tricks</div></div>
+        <div class="hdr-row"><div class="sec-sticky-title">Daily Goals</div></div>
       </div>
-      <div class="glass" style="padding:13px">
-        <div id="todoList"></div>
-        <div class="todo-add-row">
-          <div class="checkbox"></div>
-          <input type="text" id="newTodo" placeholder="Add a trick or idea..." autocomplete="off">
-          <button onclick="openAddGroupModal()" style="background:none;border:none;color:var(--accent);font-weight:bold;cursor:pointer;font-size:13px;margin-left:5px;font-family:'Inter',sans-serif">+ Group</button>
+      <div class="glass" style="padding:16px; margin-bottom: 20px;">
+        <div class="day-nav" id="goalDayNav" style="margin-top:0; border-bottom: none; margin-bottom: 10px;"></div>
+        <button class="overall-btn" onclick="showOverallGoals()" style="margin-bottom: 20px;">View Overall Stats</button>
+        
+        <div class="water-wrap" style="transform:scale(0.85);margin-top:-10px;margin-bottom:10px">
+          <div class="water-circle"><div class="water-wave" id="dailyWave" style="background:linear-gradient(to top,#FFD60A,#FF9F0A)"></div><span class="water-pct" id="dailyPct">0%</span></div>
         </div>
+        
+        <div class="capsule-box" style="margin-bottom:12px" id="addGoalBox">
+          <input type="text" id="newDailyGoal" class="act-name-inp" placeholder="Enter task...">
+          <button class="btn-add-cap" style="background:linear-gradient(135deg,#FFD60A,#FF9F0A)" onclick="addDailyGoal()">+</button>
+        </div>
+        <div id="dailyGoalList"></div>
       </div>
     </div>
   </div>
@@ -720,7 +711,7 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
     <div class="tab" onclick="switchTab('notes',this)"><svg><use href="#i-notes"/></svg><span>Notes</span></div>
     <div class="tab" onclick="switchTab('syllabus',this)"><svg><use href="#i-book"/></svg><span>Syllabus</span></div>
     <div class="tab" onclick="switchTab('pomo',this)"><svg><use href="#i-timer"/></svg><span>Focus</span></div>
-    <div class="tab" onclick="switchTab('tricks',this)"><svg><use href="#i-bulb"/></svg><span>Tricks</span></div>
+    <div class="tab" onclick="switchTab('goals',this)"><svg><use href="#i-check"/></svg><span>Goals</span></div>
   </nav>
 </div>
 
@@ -743,11 +734,10 @@ body::before{content:'';position:fixed;inset:0;background:var(--bg-grad);pointer
   const db = getFirestore(app);
   const provider = new GoogleAuthProvider();
 
-  // Native app jaisa account chooser
   provider.setCustomParameters({ prompt: 'select_account' });
 
   let currentUser = null;
-  let isSyncing = true; // Lock
+  let isSyncing = true; 
 
   window.handleAuth = async () => {
     try {
@@ -866,13 +856,10 @@ let pomoInterval=null,pomoRunning=false,pomoMode='focus';
 let pomoTotalSecs=25*60,pomoRemaining=25*60,pomoSessions=0;
 let currentTheme='', darkTheme='',lightTheme='th-arctic';
 let confirmCallback=null;
-let todoColorTarget=null;
-let editingGroupIdx=null;
 
 const LIGHT_THEMES=['th-arctic','th-paper','th-rose','th-mint','th-sand','th-lavender','th-coral','th-sakura'];
 const PALETTE=['#4834d4','#6ab04c','#eb4d4b','#be2edd','#f0932b','#22a6b3','#ff7979','#badc58','#7ed6df','#e056fd','#686de0','#30336b','#f19066','#c44569','#546de5','#3dc1d3','#f78fb3','#e15f41','#95afc0','#574b90'];
 const GRADS=[['#007AFF','#00C6FF'],['#FF9500','#FFD43B'],['#34C759','#20c997'],['#AF52DE','#E4A7FF'],['#FF2D55','#FF8FA3']];
-const TODO_COLORS=['transparent','#ff4757','#ff9f43','#ffd43b','#2ed573','#1e90ff','#a55eea','#fd79a8'];
 const THEMES=[
   {id:'',name:'Dark',colors:['#0d0f1a','#007AFF','#FF3B30']},
   {id:'th-pureblack',name:'Pure Black',colors:['#000000','#ffffff','#333333']},
@@ -913,7 +900,6 @@ window.onload=()=>{
   if(appData.name) updateGreeting();
   
   renderNotes();
-  renderTodos();
   renderCountdowns();
   renderSyllabus(false);
   initColorWheel();
@@ -922,14 +908,17 @@ window.onload=()=>{
   updatePomoSessions();
   setupSylScroll();
   setupCanvas();
+  
+  // Render Goals directly in the new section
+  renderGoalDayNav(); 
+  renderDailyGoals();
 };
 
 function loadAll(){
   try{const s=localStorage.getItem(K.app);if(s)appData=JSON.parse(s);}catch(e){}
   if(!appData.notes)appData.notes=[];
-  if(!appData.todos)appData.todos=[];
+  if(!appData.todos)appData.todos=[]; // Keeping this so old data doesn't crash app
   if(!appData.countdowns)appData.countdowns=[];
-  appData.todos.forEach(t=>{if(!t.color)t.color='transparent';if(t.hard===undefined)t.hard=false;});
   try{const s=localStorage.getItem(K.syl);sylData=s?JSON.parse(s):[];}catch(e){sylData=[];}
   if(!sylData.length)sylData=[{title:'Chemistry',sections:[{title:'Physical Chemistry',items:[{name:'Mole Concept',checked:false,hard:false}]}]}];
   sylHistory=[JSON.stringify(sylData)];sylHistIdx=0;
@@ -968,7 +957,6 @@ function switchTab(tab,el){
   if(tab==='count')hdr.classList.remove('gone');
   else hdr.classList.add('gone');
   document.getElementById('fabBtn').style.display=tab==='notes'?'flex':'none';
-  closeTodoColorPop();
 }
 
 /* ─── THEME ─── */
@@ -1012,7 +1000,7 @@ function toggleMode(){
 }
 function openThemeModal(){buildThemeGrid();document.getElementById('themeModal').style.display='flex';}
 function closeModal(id){document.getElementById(id).style.display='none';}
-window.onpopstate=()=>{['editorSheet','detailModal','dateModal','brainModal','dailyModal','themeModal','sylInputModal','pasteModal','editItemModal','cdModeModal','addGroupModal','editGroupModal'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});};
+window.onpopstate=()=>{['editorSheet','detailModal','dateModal','brainModal','themeModal','sylInputModal','pasteModal','editItemModal','cdModeModal'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});};
 
 /* ─── NAME + WAVE ─── */
 function saveName(){
@@ -1300,147 +1288,6 @@ function isCanvasBlank(canvas) {
   return canvas.toDataURL() === blank.toDataURL();
 }
 
-/* ─── TRICKS/TODOS ─── */
-function renderTodos(){
-  const l = document.getElementById('todoList');
-  l.innerHTML = '';
-  appData.todos.forEach((t, i) => {
-    if(t.isGroup) {
-      // 1. Group Header (Title & Progress Ring)
-      const header = document.createElement('div');
-      header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:12px 4px 8px;margin-top:14px;border-bottom:1px solid var(--border2);margin-bottom:8px';
-      
-      let doneCount = 0;
-      let totalCount = t.items ? t.items.length : 0;
-      if (t.items) t.items.forEach(it => { if(it.done) doneCount++; });
-      let pct = totalCount === 0 ? 0 : Math.round((doneCount/totalCount)*100);
-
-      let strokeCol = (t.color && t.color!=='transparent') ? t.color : 'var(--accent)';
-
-      header.innerHTML = `
-        <div style="font-weight:900;font-size:16px;color:var(--text);display:flex;align-items:center;gap:6px">
-           ${t.title}
-           <button style="background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;display:flex;align-items:center;" onclick="editGroupTitle(${i})">
-             <svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><use href="#i-pen"/></svg>
-           </button>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px">
-            <div class="group-progress" style="width:30px;height:30px;position:relative;display:flex;align-items:center;justify-content:center;">
-                <svg viewBox="0 0 36 36" style="width:100%;height:100%;transform:rotate(-90deg);position:absolute;inset:0;">
-                   <circle cx="18" cy="18" r="15.915" style="fill:none;stroke:var(--border2);stroke-width:3;stroke-linecap:round;" />
-                   <circle cx="18" cy="18" r="15.915" style="fill:none;stroke:${strokeCol};stroke-width:3;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:${100-pct};transition:all 0.3s;" />
-                </svg>
-                <span style="font-size:9px;font-weight:900;color:var(--text);z-index:1;">${pct}%</span>
-            </div>
-        </div>
-      `;
-      
-      longPress(header,()=>showDelOverlay(header,async()=>{
-        const ok=await showConfirm('Delete Combination', 'Delete this combination and all its tricks?', '🗑️');
-        if(ok) deleteTodoItem(i);
-      }));
-      // Swipe right on header changes color for ALL items inside this group
-      addSwipeRight(header,()=>openTodoColorPop(i,header));
-      l.appendChild(header);
-
-      // 2. Normal Items inside Group (Independent appearance)
-      (t.items || []).forEach((st, j) => {
-         const row = document.createElement('div');
-         row.className = 'todo-item' + (st.hard?' red-mark':'');
-         
-         if(t.color && t.color!=='transparent'){
-           row.style.background = hexRgba(t.color, 0.15);
-           row.style.border = '1px solid ' + hexRgba(t.color, 0.4);
-         }
-         
-         row.innerHTML = `
-           <div class="checkbox ${st.done?'done':''}" onclick="togGroupTodo(${i},${j})">${st.done?'<svg style="width:11px;height:11px;stroke:white;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round"><use href="#i-check"/></svg>':''}</div>
-           <div class="todo-text ${st.done?'done':''}">${st.txt}</div>
-           <button style="background:none;border:none;color:var(--red);opacity:0.6;font-size:18px;cursor:pointer;padding:0 8px;font-weight:bold;display:flex;align-items:center;justify-content:center;" onclick="delGroupTodo(${i},${j})">×</button>
-         `;
-         l.appendChild(row);
-      });
-
-      // 3. Independent Add Row for the Group
-      const addRow = document.createElement('div');
-      addRow.className = 'todo-add-row';
-      addRow.style.marginBottom = '12px';
-      addRow.style.borderTop = 'none';
-      addRow.innerHTML = `<div class="checkbox" style="opacity:0.3;border-style:dashed;"></div><input type="text" placeholder="Add trick to ${t.title}..." onkeypress="checkGroupTodo(event, ${i})">`;
-      l.appendChild(addRow);
-
-    } else {
-      // STANDARD INDEPENDENT TRICK
-      const row=document.createElement('div');
-      row.className='todo-item'+(t.hard?' red-mark':'');
-      
-      if(t.color && t.color!=='transparent'){
-        row.style.background = hexRgba(t.color, 0.15);
-        row.style.border = '1px solid ' + hexRgba(t.color, 0.4);
-      }
-      
-      longPress(row,()=>showDelOverlay(row,()=>deleteTodoItem(i)));
-      addSwipeRight(row,()=>openTodoColorPop(i,row));
-      const inner=document.createElement('div');inner.style.cssText='display:flex;align-items:center;gap:10px;flex:1;overflow:hidden';
-      inner.innerHTML=`<div class="checkbox ${t.done?'done':''}" onclick="togTodo(${i})">${t.done?'<svg style="width:11px;height:11px;stroke:white;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round"><use href="#i-check"/></svg>':''}</div><div class="todo-text ${t.done?'done':''}">${t.txt}</div>`;
-      row.appendChild(inner);
-      l.appendChild(row);
-    }
-  });
-}
-function addSwipeRight(el,cb){
-  let sx=0,sy=0;
-  el.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
-  el.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx,dy=Math.abs(e.changedTouches[0].clientY-sy);if(dx>55&&dy<40)cb();},{passive:true});
-}
-function openTodoColorPop(idx,row){
-  closeTodoColorPop();todoColorTarget=idx;
-  const pop=document.getElementById('todoColorPop');
-  pop.innerHTML=TODO_COLORS.map(c=>`<div class="cp-dot" style="background:${c==='transparent'?'var(--surface)':c};${c==='transparent'?'border:2px dashed var(--border)':''}" onclick="setTodoColor(${idx},'${c}')"></div>`).join('');
-  pop.style.display='flex';
-  setTimeout(()=>document.addEventListener('click',closeTodoColorPopOut),50);
-}
-function closeTodoColorPopOut(e){if(!document.getElementById('todoColorPop').contains(e.target)){closeTodoColorPop();}}
-function closeTodoColorPop(){document.getElementById('todoColorPop').style.display='none';document.removeEventListener('click',closeTodoColorPopOut);todoColorTarget=null;}
-function setTodoColor(idx,color){appData.todos[idx].color=color;saveApp();renderTodos();closeTodoColorPop();}
-function checkTodo(e){if(e.key==='Enter'&&e.target.value.trim()){appData.todos.push({txt:e.target.value,done:false,color:'transparent',hard:false});saveApp();renderTodos();e.target.value='';}}
-function togTodo(i){appData.todos[i].done=!appData.todos[i].done;saveApp();renderTodos();}
-function deleteTodoItem(i){appData.todos.splice(i,1);saveApp();renderTodos();}
-
-/* --- NEW COMBINATION/GROUP LOGIC --- */
-function openAddGroupModal() {
-  document.getElementById('groupTitleInp').value = '';
-  document.getElementById('addGroupModal').style.display = 'flex';
-  setTimeout(() => document.getElementById('groupTitleInp').focus(), 100);
-}
-function saveNewGroup() {
-  const title = document.getElementById('groupTitleInp').value.trim();
-  if(title) {
-    appData.todos.push({isGroup:true, title:title, items:[], color:'transparent'});
-    saveApp(); renderTodos();
-  }
-  closeModal('addGroupModal');
-}
-function editGroupTitle(i) {
-  editingGroupIdx = i;
-  document.getElementById('editGroupTitleInp').value = appData.todos[i].title;
-  document.getElementById('editGroupModal').style.display = 'flex';
-  setTimeout(() => document.getElementById('editGroupTitleInp').focus(), 100);
-}
-function saveEditGroup() {
-  const title = document.getElementById('editGroupTitleInp').value.trim();
-  if(title && editingGroupIdx !== null) {
-    appData.todos[editingGroupIdx].title = title;
-    saveApp(); renderTodos();
-  }
-  closeModal('editGroupModal');
-  editingGroupIdx = null;
-}
-function checkGroupTodo(e,i){if(e.key==='Enter'&&e.target.value.trim()){if(!appData.todos[i].items)appData.todos[i].items=[];appData.todos[i].items.push({txt:e.target.value.trim(),done:false});saveApp();renderTodos();}}
-function togGroupTodo(i,j){appData.todos[i].items[j].done=!appData.todos[i].items[j].done;saveApp();renderTodos();}
-function delGroupTodo(i,j){appData.todos[i].items.splice(j,1);saveApp();renderTodos();}
-
-
 /* ─── SYLLABUS ─── */
 function setupSylScroll(){
   const c=document.getElementById('sylCarousel');
@@ -1613,7 +1460,6 @@ function toggleColorPicker(){const o=document.getElementById('colorPickerOverlay
 function selectActColor(col){selectedColor=col;document.getElementById('colorTrigger').style.background=col;document.querySelector('.btn-add-cap').style.background=col;toggleColorPicker();}
 
 /* ─── DAILY GOALS ─── */
-function openDailyModal(){ loadDayData(); renderGoalDayNav(); renderDailyGoals(); document.getElementById('dailyModal').style.display='flex'; }
 function selectGoalDay(id){isOverallModeGoals=false;currentDayId=id;renderGoalDayNav();renderDailyGoals();}
 function showOverallGoals(){isOverallModeGoals=true;document.querySelectorAll('#goalDayNav .day-chip').forEach(b=>b.classList.remove('active'));renderDailyGoals();}
 function addNewGoalDay(){addNewDay();renderGoalDayNav();renderDailyGoals();}
@@ -1680,7 +1526,16 @@ function renderDailyGoals(){
   document.getElementById('dailyWave').style.top=(100-pct)+'%';
 }
 
-/* ─── POMODORO ─── */
+/* ─── FOCUS / POMODORO / NEW TOOLS ─── */
+function switchFocusTool(tool, btn) {
+    document.querySelectorAll('.tool-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('pomo-container').style.display = tool === 'pomo' ? 'block' : 'none';
+    document.getElementById('stopwatch-container').style.display = tool === 'stopwatch' ? 'block' : 'none';
+    document.getElementById('worldclock-container').style.display = tool === 'worldclock' ? 'block' : 'none';
+    if(tool === 'worldclock') updateWorldClock();
+}
+
 function beep(){
   try{
     const ctx=new (window.AudioContext||window.webkitAudioContext)();
@@ -1730,6 +1585,73 @@ function updatePomoDisplay(){
 }
 function updatePomoSessions(){const dots=document.getElementById('sessionDots');dots.innerHTML='';for(let i=0;i<4;i++){const d=document.createElement('div');d.className='s-dot '+(i<(pomoSessions%4)?'done':'');dots.appendChild(d);}}
 
+/* ─── STOPWATCH JS ─── */
+let swInterval = null;
+let swStartTime = 0;
+let swElapsedTime = 0;
+let swRunning = false;
+
+function toggleStopwatch() {
+    if(swRunning) {
+        clearInterval(swInterval);
+        swRunning = false;
+        document.getElementById('swStartBtn').innerHTML = '<svg style="width:14px;height:14px;fill:white;stroke:none"><use href="#i-play"/></svg> Start';
+    } else {
+        swStartTime = Date.now() - swElapsedTime;
+        swInterval = setInterval(updateStopwatch, 10);
+        swRunning = true;
+        document.getElementById('swStartBtn').innerHTML = '<svg style="width:13px;height:13px;fill:white;stroke:none"><use href="#i-pause"/></svg> Pause';
+    }
+}
+function resetStopwatch() {
+    clearInterval(swInterval);
+    swRunning = false;
+    swElapsedTime = 0;
+    updateStopwatchDisplay(0);
+    document.getElementById('swStartBtn').innerHTML = '<svg style="width:14px;height:14px;fill:white;stroke:none"><use href="#i-play"/></svg> Start';
+}
+function updateStopwatch() {
+    swElapsedTime = Date.now() - swStartTime;
+    updateStopwatchDisplay(swElapsedTime);
+}
+function updateStopwatchDisplay(ms) {
+    let totalSec = Math.floor(ms / 1000);
+    let hours = Math.floor(totalSec / 3600);
+    let mins = Math.floor((totalSec % 3600) / 60);
+    let secs = totalSec % 60;
+    let millis = Math.floor((ms % 1000) / 10);
+
+    document.getElementById('swTime').innerText = 
+        (hours > 0 ? String(hours).padStart(2,'0') + ':' : '') +
+        String(mins).padStart(2,'0') + ':' + 
+        String(secs).padStart(2,'0') + '.' + 
+        String(millis).padStart(2,'0');
+}
+
+/* ─── WORLD CLOCK JS ─── */
+function updateWorldClock() {
+    if(document.getElementById('worldclock-container').style.display === 'none') return;
+    const now = new Date();
+    const cities = [
+        { id: 'wc-local', tz: Intl.DateTimeFormat().resolvedOptions().timeZone, name: 'Local Time' },
+        { id: 'wc-ny', tz: 'America/New_York', name: 'New York' },
+        { id: 'wc-lon', tz: 'Europe/London', name: 'London' },
+        { id: 'wc-tokyo', tz: 'Asia/Tokyo', name: 'Tokyo' }
+    ];
+    
+    cities.forEach(c => {
+        const timeStr = now.toLocaleTimeString('en-US', { timeZone: c.tz, hour: '2-digit', minute: '2-digit', hour12: true });
+        const dateStr = now.toLocaleDateString('en-US', { timeZone: c.tz, weekday: 'short', month: 'short', day: 'numeric' });
+        
+        const el = document.getElementById(c.id);
+        if(el) {
+            el.querySelector('.wc-time').innerText = timeStr;
+            el.querySelector('.wc-date').innerText = dateStr;
+        }
+    });
+}
+setInterval(updateWorldClock, 1000);
+
 /* ─── UTILS ─── */
 function longPress(el,cb){
   let t; const start=()=>{t=setTimeout(()=>{cb();if(navigator.vibrate)navigator.vibrate(36);},620);}; const cancel=()=>clearTimeout(t);
@@ -1743,7 +1665,7 @@ function showDelOverlay(card,delFn){
   ov.onclick=e=>{if(e.target===ov)ov.remove();}; card.appendChild(ov);ov.style.display='flex';
 }
 
-[['sylMInp',()=>sylSaveData()],['editItemInp',()=>saveEditItem()],['nameInp',()=>saveName()],['newDailyGoal',()=>addDailyGoal()],['newActName',()=>addCustomActivity()],['eventInp',()=>addCountdown()],['nListAdd',()=>{}],['groupTitleInp',()=>saveNewGroup()],['editGroupTitleInp',()=>saveEditGroup()]]
+[['sylMInp',()=>sylSaveData()],['editItemInp',()=>saveEditItem()],['nameInp',()=>saveName()],['newDailyGoal',()=>addDailyGoal()],['newActName',()=>addCustomActivity()],['eventInp',()=>addCountdown()],['nListAdd',()=>{}]]
 .forEach(([id,fn])=>{const el=document.getElementById(id);if(el)el.addEventListener('keypress',e=>{if(e.key==='Enter')fn();});});
 </script>
 </body>
